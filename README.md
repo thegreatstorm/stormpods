@@ -1,2 +1,2 @@
-# StormPods
-Cloud, and Docker? How about Storm and Pods?
+# LinuxGSM-PodManager
+Docker Supported LinuxGSM
