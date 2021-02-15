@@ -26,7 +26,6 @@ config_settings = config_controller(script_dir, "var/conf/default.conf", "var/co
 app_name = config_settings.get('general', 'app_name')
 version = config_settings.get('general', 'version')
 description = config_settings.get('general', 'description')
-app_settings["game_list"] = config_settings.get('general', 'game_list')
 app_settings["app_name"] = config_settings.get('general', 'app_name')
 app_settings["version"] = config_settings.get('general', 'version')
 app_settings["description"] = config_settings.get('general', 'description')
