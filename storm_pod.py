@@ -47,8 +47,9 @@ if args.install:
     command = "docker build -t storm-pod:latest . -f {1}/var/lib/docker/{0}/Dockerfile".format(app_settings["docker_image"], app_settings["app_dir"])
     os.system(command)
     print("Docker Image Installed: {}:latest".format(app_settings["docker_image"]))
-    command = "git clone https://github.com/thegreatstorm/game-ansible {}/var/lib/playbooks".format(app_settings["app_dir"])
-    os.system(command)
+    if not os.path.exists("{}/var/lib/playbooks".format(app_settings["app_dir"])):
+        command = "git clone https://github.com/thegreatstorm/game-ansible {}/var/lib/playbooks".format(app_settings["app_dir"])
+        os.system(command)
 
 if args.create and args.create is not None:
     print("Creating Docker Container")
