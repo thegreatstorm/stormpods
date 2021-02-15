@@ -5,3 +5,4 @@ RUN yum install -y epel-release
 RUN yum install -y git ansible ncurses
 RUN echo "alias ll='ls -l --color=auto'" >> /root/.bashrc
 
+RUN mkdir -p /opt/server/

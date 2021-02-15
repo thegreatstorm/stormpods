@@ -1,8 +1,15 @@
 from subprocess import check_output, Popen
 import socket
 import threading
+import os
 
 from bin.utils.system_controller import random_port, random_password
+
+
+def command_prefix(container_id, command, user):
+    main_command = 'docker exec -u {0} -t {1} sh -c \'{2}\''.format(user, container_id, command)
+
+    return main_command
 
 
 def rustserver(image):
@@ -21,11 +28,18 @@ def rustserver(image):
         data["container_id"] = container_id
         data["game_port"] = game_port
         data["rcon_port"] = rcon_port
-        data["ssh_port"] = ssh_port
         data["app_port"] = app_port
 
         # Insert New Record into database.
         print(str(data))
+        command = command_prefix(data["container_id"], 'echo "export $server_port={}">> /etc/bashrc'.format(game_port), 'root')
+        os.system(command)
+        command = command_prefix(data["container_id"], 'echo "export rcon_port={}" >> /etc/bashrc'.format(rcon_port), 'root')
+        os.system(command)
+        command = command_prefix(data["container_id"], 'echo "export app_port={}" >> /etc/bashrc'.format(app_port), 'root')
+        os.system(command)
+        command = command_prefix(data["container_id"], 'echo "Ports are environmental variables for this docker.'.format(app_port), 'root')
+        os.system(command)
 
     except Exception as e:
         print("Failed to create container: {}".format(str(e)))
