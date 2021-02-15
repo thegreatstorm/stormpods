@@ -48,14 +48,16 @@ if args.install:
     os.system(command)
     print("Docker Image Installed: {}:latest".format(app_settings["docker_image"]))
     if not os.path.exists("{}/var/lib/playbooks".format(app_settings["app_dir"])):
+        print("Ansible scripts already existing.")
         command = "git clone https://github.com/thegreatstorm/game-ansible {}/var/lib/playbooks".format(app_settings["app_dir"])
         os.system(command)
+    else:
+        print("Installing Ansible Game Scripts.")
 
 if args.create and args.create is not None:
     print("Creating Docker Container")
     print("--------------------------------------------------------")
     user_input = args.create
-    image = args.os
     create_game_server(app_settings, user_input)
 
 if args.list:
