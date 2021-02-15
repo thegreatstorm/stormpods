@@ -57,9 +57,9 @@ if args.create and args.create is not None:
 
 if args.list:
     print("Game Server Containers List")
-    print("--------------------------------------------------------")
     print("If you just installed me, and I don't have any game servers the --install will set me up.")
     print("Make sure to run --update to get latest game list.")
+    print("--------------------------------------------------------")
     for x in os.listdir('{}/var/lib/playbooks/'.format(prefix_dir)):
       print(x)
 
