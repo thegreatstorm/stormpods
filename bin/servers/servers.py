@@ -32,13 +32,13 @@ def rustserver(image):
 
         # Insert New Record into database.
         print(str(data))
-        command = command_prefix(data["container_id"], 'echo "export $server_port={}">> /etc/bashrc'.format(game_port), 'root')
+        command = command_prefix(data["container_id"], 'echo "export server_port={}">> /etc/bashrc'.format(game_port), 'root')
         os.system(command)
         command = command_prefix(data["container_id"], 'echo "export rcon_port={}" >> /etc/bashrc'.format(rcon_port), 'root')
         os.system(command)
         command = command_prefix(data["container_id"], 'echo "export app_port={}" >> /etc/bashrc'.format(app_port), 'root')
         os.system(command)
-        command = command_prefix(data["container_id"], 'echo "Ports are environmental variables for this docker.'.format(app_port), 'root')
+        command = command_prefix(data["container_id"], 'echo "echo \"Ports are environmental variables for this docker.\"" >> /etc/bashrc'.format(app_port), 'root')
         os.system(command)
 
     except Exception as e:
