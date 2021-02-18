@@ -59,6 +59,7 @@ if args.start and args.start is not None:
         game_config = get_game_config(config_file)
         if args.container and args.container is not None:
             container = args.container
+            print(game_config)
             ansible_vars = Ansible.convert_config_json(game_config)
             server = Servers(user_input=user_input, container=container, config_json=ansible_vars)
             server.start()
