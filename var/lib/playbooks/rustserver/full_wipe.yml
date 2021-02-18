@@ -1,5 +1,0 @@
----
-- hosts: localhost
-  tasks:
-  - name: "Remove Map Files"
-    shell: "rm -rf {{app_dir}}/rustserver/server/{{identity}}"

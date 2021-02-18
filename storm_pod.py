@@ -62,6 +62,7 @@ if args.list:
     print("Make sure to run --update to get latest game list.")
     print("--------------------------------------------------------")
     data = urllib.request.urlopen("https://raw.githubusercontent.com/thegreatstorm/ansiblepods/main/gamelist.txt")
+    data = data.decode('utf-8')
     for line in data:
         print(line)
 
