@@ -1,23 +1,33 @@
 import os
-from bin.servers.servers import rustserver, minecraft, terraria
+from bin.servers.servers import RustServer, MineCraft, Terraria, Valheim
 
 
-def create_game_server(app_settings, game_server):
-    # Image default uses.
-    image = "storm-pod"
+class Servers:
+    def __init__(self, app_settings, user_input, container_id):
+        self.image = "storm-pod"
+        self.app_settings = app_settings
+        self.user_input = user_input
+        self.container_id = container_id
 
-    if game_server == "rustserver":
-        rustserver(image)
-    elif game_server == "minecraft":
-        minecraft(image)
-    elif game_server == "terraria":
-        terraria(image)
-    elif game_server == "valheim":
-        terraria(image)
-    else:
-        print("game_server not in the list.")
+    def create(self):
+        # Image default uses.
+        image = "storm-pod"
 
+        if self.user_input == "rustserver":
+            server = RustServer(image)
+            server.install()
+        elif self.user_input == "minecraft":
+            server = MineCraft(image)
+            server.install()
+        elif self.user_input == "terraria":
+            server = Terraria(image)
+            server.install()
+        elif self.user_input == "valheim":
+            server = Valheim(image)
+            server.install()
+        else:
+            print("User Input not in the list.")
 
-def delete_game_server(app_settings, container_id):
-    command = "docker rm -f {}".format(container_id)
-    os.system(command)
+    def delete(self):
+        command = "docker rm -f {}".format(self.container_id)
+        os.system(command)

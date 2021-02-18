@@ -10,7 +10,7 @@ import urllib.request
 # Custom Code
 from bin.utils.argument_controller import argument_controller
 from bin.utils.configuration_controller import config_controller
-from bin.server_controller import create_game_server, delete_game_server
+from bin.server_controller import Servers
 
 
 app_settings = {}
@@ -54,14 +54,15 @@ if args.create and args.create is not None:
     print("Creating Docker Container")
     print("--------------------------------------------------------")
     user_input = args.create
-    create_game_server(app_settings, user_input)
-
+    server = Servers(app_settings=app_settings, user_input=user_input)
+    server.create()
 
 if args.delete and args.delete is not None:
     user_input = args.delete
     print("Deleting Docker Container: {}".format(user_input))
     print("--------------------------------------------------------")
-    delete_game_server(app_settings, user_input)
+    server = Servers(container_id=user_input)
+    server.delete()
 
 if args.list:
     print("Game Server Containers List")

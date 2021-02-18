@@ -12,132 +12,148 @@ def command_prefix(container_id, command, user):
     return main_command
 
 
-def rustserver(image):
-    data = {}
-    game_port = random_port()
-    rcon_port = random_port()
-    ssh_port = random_port()
-    app_port = random_port()
+class RustServer:
+    def __init__(self, image):
+        self.image = image
 
-    command = "docker run -td -p {0}:{0}/udp -p {0}:{0}/tcp -p {1}:{1}/tcp -p {2}:{2}/tcp -p {3}:22 {4}".format(game_port, rcon_port, app_port, ssh_port, image)
+    def install(self):
+        data = {}
+        game_port = random_port()
+        rcon_port = random_port()
+        ssh_port = random_port()
+        app_port = random_port()
 
-    try:
-        container_id = check_output(command, shell=True).decode('ascii')
-        container_id = container_id.rstrip("\n")
+        command = "docker run -td -p {0}:{0}/udp -p {0}:{0}/tcp -p {1}:{1}/tcp -p {2}:{2}/tcp -p {3}:22 {4}".format(game_port, rcon_port, app_port, ssh_port, self.image)
 
-        data["container_id"] = container_id
-        data["game_port"] = game_port
-        data["rcon_port"] = rcon_port
-        data["app_port"] = app_port
+        try:
+            container_id = check_output(command, shell=True).decode('ascii')
+            container_id = container_id.rstrip("\n")
 
-        print(str(data))
-        # Insert New Record into database.
-        commands = []
-        commands.append('echo "export server_port={}">> /etc/bashrc'.format(game_port))
-        commands.append('echo "export rcon_port={}" >> /etc/bashrc'.format(rcon_port))
-        commands.append('echo "export app_port={}" >> /etc/bashrc'.format(app_port))
-        commands.append('echo "echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"" >> /etc/bashrc'.format(game_port,rcon_port,app_port))
-        commands.append('git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods')
-        commands.append('ansible-playbook /opt/ansiblepods/rustserver/requirements.yml')
-        commands.append('ansible-playbook /opt/ansiblepods/rustserver/install.yml')
+            data["container_id"] = container_id
+            data["game_port"] = game_port
+            data["rcon_port"] = rcon_port
+            data["app_port"] = app_port
 
-        for command in commands:
-            command = command_prefix(data["container_id"], command, 'root')
-            os.system(command)
+            print(str(data))
+            # Insert New Record into database.
+            commands = []
+            commands.append('echo "export server_port={}">> /etc/bashrc'.format(game_port))
+            commands.append('echo "export rcon_port={}" >> /etc/bashrc'.format(rcon_port))
+            commands.append('echo "export app_port={}" >> /etc/bashrc'.format(app_port))
+            commands.append('echo "echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"" >> /etc/bashrc'.format(game_port,rcon_port,app_port))
+            commands.append('git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods')
+            commands.append('ansible-playbook /opt/ansiblepods/rustserver/requirements.yml')
+            commands.append('ansible-playbook /opt/ansiblepods/rustserver/install.yml')
 
-    except Exception as e:
-        print("Failed to create container: {}".format(str(e)))
-        data["status"] = "Failed to create container. {}".format(str(e))
+            for command in commands:
+                command = command_prefix(data["container_id"], command, 'root')
+                os.system(command)
 
-    return data
+        except Exception as e:
+            print("Failed to create container: {}".format(str(e)))
+            data["status"] = "Failed to create container. {}".format(str(e))
 
-
-def minecraft(image):
-    data = {}
-    game_port = random_port()
-    bedrock_port = random_port()
-    rcon_port = random_port()
-    ssh_port = random_port()
-
-    game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
-    bedrock_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(bedrock_port)
-    rcon_port = "-p {0}:{0}/tcp".format(rcon_port)
-    ssh_port = "-p {0}:22/tcp".format(ssh_port)
-
-    command = "docker run -td {0} {1} {2} {3} {4}".format(game_port, bedrock_port, rcon_port,  ssh_port, image)
-
-    try:
-        container_id = check_output(command, shell=True).decode('ascii')
-        container_id = container_id.rstrip("\n")
-
-        data["container_id"] = container_id
-        data["game_port"] = game_port
-        data["rcon_port"] = rcon_port
-        data["ssh_port"] = ssh_port
-
-        # Insert New Record into database.
-        print(str(data))
-
-    except Exception as e:
-        print("Failed to create container: {}".format(str(e)))
-        data["status"] = "Failed to create container. {}".format(str(e))
-
-    return data
+        return data
 
 
-def terraria(image):
-    data = {}
-    game_port = random_port()
-    ssh_port = random_port()
+class MineCraft:
+    def __init__(self, image):
+        self.image = image
 
-    game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
-    ssh_port = "-p {0}:22/tcp".format(ssh_port)
+    def install(self):
+        data = {}
+        game_port = random_port()
+        bedrock_port = random_port()
+        rcon_port = random_port()
+        ssh_port = random_port()
 
-    command = "docker run -td {0} {1} {2}".format(game_port, ssh_port, image)
+        game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
+        bedrock_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(bedrock_port)
+        rcon_port = "-p {0}:{0}/tcp".format(rcon_port)
+        ssh_port = "-p {0}:22/tcp".format(ssh_port)
 
-    try:
-        container_id = check_output(command, shell=True).decode('ascii')
-        container_id = container_id.rstrip("\n")
+        command = "docker run -td {0} {1} {2} {3} {4}".format(game_port, bedrock_port, rcon_port, ssh_port, self.image)
 
-        data["container_id"] = container_id
-        data["game_port"] = game_port
-        data["ssh_port"] = ssh_port
+        try:
+            container_id = check_output(command, shell=True).decode('ascii')
+            container_id = container_id.rstrip("\n")
 
-        # Insert New Record into database.
-        print(str(data))
+            data["container_id"] = container_id
+            data["game_port"] = game_port
+            data["rcon_port"] = rcon_port
+            data["ssh_port"] = ssh_port
 
-    except Exception as e:
-        print("Failed to create container: {}".format(str(e)))
-        data["status"] = "Failed to create container. {}".format(str(e))
+            # Insert New Record into database.
+            print(str(data))
 
-    return data
+        except Exception as e:
+            print("Failed to create container: {}".format(str(e)))
+            data["status"] = "Failed to create container. {}".format(str(e))
+
+        return data
 
 
-def valheim(image):
-    data = {}
-    game_port = random_port()
-    steam_port = random_port()
-    ssh_port = random_port()
+class Terraria:
+    def __init__(self, image):
+        self.image = image
 
-    game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
-    steam_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(steam_port)
-    ssh_port = "-p {0}:22/tcp".format(ssh_port)
+    def install(self):
+        data = {}
+        game_port = random_port()
+        ssh_port = random_port()
 
-    command = "docker run -td {0} {1} {2} {3}".format(game_port, steam_port, ssh_port, image)
+        game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
+        ssh_port = "-p {0}:22/tcp".format(ssh_port)
 
-    try:
-        container_id = check_output(command, shell=True).decode('ascii')
-        container_id = container_id.rstrip("\n")
+        command = "docker run -td {0} {1} {2}".format(game_port, ssh_port, self.image)
 
-        data["container_id"] = container_id
-        data["game_port"] = game_port
-        data["ssh_port"] = ssh_port
+        try:
+            container_id = check_output(command, shell=True).decode('ascii')
+            container_id = container_id.rstrip("\n")
 
-        # Insert New Record into database.
-        print(str(data))
+            data["container_id"] = container_id
+            data["game_port"] = game_port
+            data["ssh_port"] = ssh_port
 
-    except Exception as e:
-        print("Failed to create container: {}".format(str(e)))
-        data["status"] = "Failed to create container. {}".format(str(e))
+            # Insert New Record into database.
+            print(str(data))
 
-    return data
+        except Exception as e:
+            print("Failed to create container: {}".format(str(e)))
+            data["status"] = "Failed to create container. {}".format(str(e))
+
+        return data
+
+
+class Valheim:
+    def __init__(self, image):
+        self.image = image
+
+    def install(self):
+        data = {}
+        game_port = random_port()
+        steam_port = random_port()
+        ssh_port = random_port()
+
+        game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
+        steam_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(steam_port)
+        ssh_port = "-p {0}:22/tcp".format(ssh_port)
+
+        command = "docker run -td {0} {1} {2} {3}".format(game_port, steam_port, ssh_port, self.image)
+
+        try:
+            container_id = check_output(command, shell=True).decode('ascii')
+            container_id = container_id.rstrip("\n")
+
+            data["container_id"] = container_id
+            data["game_port"] = game_port
+            data["ssh_port"] = ssh_port
+
+            # Insert New Record into database.
+            print(str(data))
+
+        except Exception as e:
+            print("Failed to create container: {}".format(str(e)))
+            data["status"] = "Failed to create container. {}".format(str(e))
+
+        return data
