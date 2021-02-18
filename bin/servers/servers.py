@@ -30,22 +30,20 @@ def rustserver(image):
         data["rcon_port"] = rcon_port
         data["app_port"] = app_port
 
-        # Insert New Record into database.
         print(str(data))
-        command = command_prefix(data["container_id"], 'echo "export server_port={}">> /etc/bashrc'.format(game_port), 'root')
-        os.system(command)
-        command = command_prefix(data["container_id"], 'echo "export rcon_port={}" >> /etc/bashrc'.format(rcon_port), 'root')
-        os.system(command)
-        command = command_prefix(data["container_id"], 'echo "export app_port={}" >> /etc/bashrc'.format(app_port), 'root')
-        os.system(command)
-        command = command_prefix(data["container_id"], 'echo "echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"" >> /etc/bashrc'.format(game_port,rcon_port,app_port), 'root')
-        os.system(command)
-        command = command_prefix(data["container_id"], 'git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods', 'root')
-        os.system(command)
-        command = command_prefix(data["container_id"], 'ansible-playbook /opt/ansiblepods/rustserver/requirements.yml', 'root')
-        os.system(command)
-        command = command_prefix(data["container_id"], 'ansible-playbook /opt/ansiblepods/rustserver/install.yml', 'root')
-        os.system(command)
+        # Insert New Record into database.
+        commands = []
+        commands.append('echo "export server_port={}">> /etc/bashrc'.format(game_port))
+        commands.append('echo "export rcon_port={}" >> /etc/bashrc'.format(rcon_port))
+        commands.append('echo "export app_port={}" >> /etc/bashrc'.format(app_port))
+        commands.append('echo "echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"" >> /etc/bashrc" >> /etc/bashrc'.format(game_port,rcon_port,app_port))
+        commands.append('git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods')
+        commands.append('ansible-playbook /opt/ansiblepods/rustserver/requirements.yml')
+        commands.append('ansible-playbook /opt/ansiblepods/rustserver/install.yml')
+
+        for command in commands:
+            command = command_prefix(data["container_id"], command, 'root')
+            os.system(command)
 
     except Exception as e:
         print("Failed to create container: {}".format(str(e)))
