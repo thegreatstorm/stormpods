@@ -9,8 +9,9 @@ import urllib.request
 
 # Custom Code
 from bin.utils.argument_controller import argument_controller
-from bin.utils.configuration_controller import config_controller
+from bin.utils.configuration_controller import config_controller, get_game_config
 from bin.server_controller import Servers
+from bin.servers.ansible import Ansible
 
 
 app_settings = {}
@@ -49,6 +50,23 @@ if args.install:
     os.system(command)
     print("Docker Image Installed: {}:latest".format(app_settings["docker_image"]))
 
+if args.start and args.start is not None:
+    print("Starting Game Server")
+    print("--------------------------------------------------------")
+    user_input = args.start
+    if args.config and args.config is not None:
+        config_file = args.config
+        game_config = get_game_config(prefix_dir, config_file)
+        if args.container_id and args.container_id is not None:
+            container = args.container
+            ansible_vars = Ansible.convert_config_json(game_config)
+            server = Servers(user_input=user_input, container=container, config_json=ansible_vars)
+            server.start()
+        else:
+            print("No container id Provided. --container_id=\"<id>\"")
+            exit(1)
+    else:
+        print("Make sure you use --config <config-file>")
 
 if args.create and args.create is not None:
     print("Creating Docker Container")
@@ -61,8 +79,14 @@ if args.delete and args.delete is not None:
     user_input = args.delete
     print("Deleting Docker Container: {}".format(user_input))
     print("--------------------------------------------------------")
-    server = Servers(container_id=user_input)
-    server.delete()
+    if args.container and args.container is not None:
+        container = args.container
+        server = Servers(container=container)
+        server.delete()
+    else:
+        print("No container id Provided. --container_id=\"<id>\"")
+        exit(1)
+
 
 if args.list:
     print("Game Server Containers List")

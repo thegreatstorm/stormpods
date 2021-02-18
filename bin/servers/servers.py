@@ -6,15 +6,32 @@ import os
 from bin.utils.system_controller import random_port, random_password
 
 
-def command_prefix(container_id, command, user):
-    main_command = 'docker exec -u {0} -t {1} sh -c \'{2}\''.format(user, container_id, command)
+def command_prefix(container, command, user):
+    main_command = 'docker exec -u {0} -t {1} sh -c \'{2}\''.format(user, container, command)
 
     return main_command
 
 
 class RustServer:
-    def __init__(self, image):
+    def __init__(self, image=None, container=None, config_json=None):
         self.image = image
+        self.container = container
+        self.config_json = config_json
+
+        if image is None:
+            self.image = ""
+        else:
+            self.image = image
+
+        if config_json is None:
+            self.config_json = ""
+        else:
+            self.config_json = config_json
+
+        if container is None:
+            self.container = ""
+        else:
+            self.container = container
 
     def install(self):
         data = {}
@@ -55,105 +72,8 @@ class RustServer:
 
         return data
 
-
-class MineCraft:
-    def __init__(self, image):
-        self.image = image
-
-    def install(self):
-        data = {}
-        game_port = random_port()
-        bedrock_port = random_port()
-        rcon_port = random_port()
-        ssh_port = random_port()
-
-        game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
-        bedrock_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(bedrock_port)
-        rcon_port = "-p {0}:{0}/tcp".format(rcon_port)
-        ssh_port = "-p {0}:22/tcp".format(ssh_port)
-
-        command = "docker run -td {0} {1} {2} {3} {4}".format(game_port, bedrock_port, rcon_port, ssh_port, self.image)
-
-        try:
-            container_id = check_output(command, shell=True).decode('ascii')
-            container_id = container_id.rstrip("\n")
-
-            data["container_id"] = container_id
-            data["game_port"] = game_port
-            data["rcon_port"] = rcon_port
-            data["ssh_port"] = ssh_port
-
-            # Insert New Record into database.
-            print(str(data))
-
-        except Exception as e:
-            print("Failed to create container: {}".format(str(e)))
-            data["status"] = "Failed to create container. {}".format(str(e))
-
-        return data
-
-
-class Terraria:
-    def __init__(self, image):
-        self.image = image
-
-    def install(self):
-        data = {}
-        game_port = random_port()
-        ssh_port = random_port()
-
-        game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
-        ssh_port = "-p {0}:22/tcp".format(ssh_port)
-
-        command = "docker run -td {0} {1} {2}".format(game_port, ssh_port, self.image)
-
-        try:
-            container_id = check_output(command, shell=True).decode('ascii')
-            container_id = container_id.rstrip("\n")
-
-            data["container_id"] = container_id
-            data["game_port"] = game_port
-            data["ssh_port"] = ssh_port
-
-            # Insert New Record into database.
-            print(str(data))
-
-        except Exception as e:
-            print("Failed to create container: {}".format(str(e)))
-            data["status"] = "Failed to create container. {}".format(str(e))
-
-        return data
-
-
-class Valheim:
-    def __init__(self, image):
-        self.image = image
-
-    def install(self):
-        data = {}
-        game_port = random_port()
-        steam_port = random_port()
-        ssh_port = random_port()
-
-        game_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(game_port)
-        steam_port = "-p {0}:{0}/udp -p {0}:{0}/tcp".format(steam_port)
-        ssh_port = "-p {0}:22/tcp".format(ssh_port)
-
-        command = "docker run -td {0} {1} {2} {3}".format(game_port, steam_port, ssh_port, self.image)
-
-        try:
-            container_id = check_output(command, shell=True).decode('ascii')
-            container_id = container_id.rstrip("\n")
-
-            data["container_id"] = container_id
-            data["game_port"] = game_port
-            data["ssh_port"] = ssh_port
-
-            # Insert New Record into database.
-            print(str(data))
-
-        except Exception as e:
-            print("Failed to create container: {}".format(str(e)))
-            data["status"] = "Failed to create container. {}".format(str(e))
-
-        return data
+    def start(self):
+        # Needs container id
+        command = "ansible-playbook /opt/ansiblepods/rustserver/start.yml --extra-vars '{}'".format(self.config_json)
+        command = command_prefix(self.container, command, 'root')
+        os.system(command)
