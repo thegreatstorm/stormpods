@@ -84,7 +84,7 @@ if args.delete and args.delete is not None:
         server = Servers(container=container)
         server.delete()
     else:
-        print("No container id Provided. --container_id=\"<id>\"")
+        print("No container Provided. --container=\"<id>\"")
         exit(1)
 
 
