@@ -77,4 +77,5 @@ class RustServer:
         command = "ansible-playbook /opt/ansiblepods/rustserver/start.yml --extra-vars '{}'".format(self.config_json)
         command = command.replace('"', '\"')
         command = command_prefix(self.container, command, 'root')
+        print(command)
         os.system(command)
