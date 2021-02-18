@@ -76,8 +76,3 @@ if args.list:
     for game in game_list:
         print(game)
 
-if args.update:
-    print("Updating Scripts")
-    print("--------------------------------------------------------")
-    print("Currently working on it.")
-
