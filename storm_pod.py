@@ -5,6 +5,7 @@ import argparse
 import os
 import shutil
 import json
+import urllib.request
 
 # Custom Code
 from bin.utils.argument_controller import argument_controller
@@ -60,8 +61,9 @@ if args.list:
     print("If you just installed me, and I don't have any game servers the --install will set me up.")
     print("Make sure to run --update to get latest game list.")
     print("--------------------------------------------------------")
-    for x in os.listdir('{}/var/lib/playbooks/'.format(prefix_dir)):
-      print(x)
+    data = urllib.request.urlopen("https://raw.githubusercontent.com/thegreatstorm/ansiblepods/main/gamelist.txt")
+    for line in data:
+        print(line)
 
 if args.update:
     print("Updating Scripts")
