@@ -1,4 +1,4 @@
-
+import os
 from bin.servers.servers import rustserver, minecraft, terraria
 
 
@@ -16,3 +16,8 @@ def create_game_server(app_settings, game_server):
         terraria(image)
     else:
         print("game_server not in the list.")
+
+
+def delete_game_server(app_settings, container_id):
+    command = "docker rm -f {}".format(container_id)
+    os.system(command)
