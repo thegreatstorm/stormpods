@@ -2,7 +2,7 @@ import json
 
 
 class Ansible:
-    def __init__(self, config, json_config, playbook, game_type):
+    def __init__(self, config=None, json_config=None, playbook=None, game_type=None):
         self.config = config
         self.json_config = json_config
         self.playbook = playbook
