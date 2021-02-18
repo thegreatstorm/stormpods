@@ -40,6 +40,8 @@ def rustserver(image):
         os.system(command)
         command = command_prefix(data["container_id"], 'echo "echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"" >> /etc/bashrc'.format(game_port,rcon_port,app_port), 'root')
         os.system(command)
+        command = command_prefix(data["container_id"], 'git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods', 'root')
+        os.system(command)
 
     except Exception as e:
         print("Failed to create container: {}".format(str(e)))
