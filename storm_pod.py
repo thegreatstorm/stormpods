@@ -61,9 +61,13 @@ if args.list:
     print("If you just installed me, and I don't have any game servers the --install will set me up.")
     print("Make sure to run --update to get latest game list.")
     print("--------------------------------------------------------")
+    game_list = ""
     data = urllib.request.urlopen("https://raw.githubusercontent.com/thegreatstorm/ansiblepods/main/gamelist.txt")
     for line in data:
-        print(line.decode('utf-8').split(','))
+        game_list = line.decode('utf-8').split(',')
+
+    for game in game_list:
+        print(game)
 
 if args.update:
     print("Updating Scripts")
