@@ -7,7 +7,7 @@ from bin.utils.system_controller import random_port, random_password
 
 
 def command_prefix(container, command, user):
-    main_command = 'docker exec -u {0} -t {1} sh -c \'{2}\''.format(user, container, command)
+    main_command = 'docker exec -u {0} -t {1} sh -c "{2}"'.format(user, container, command)
 
     return main_command
 
@@ -74,8 +74,7 @@ class RustServer:
 
     def start(self):
         # Needs container id
-        command = "ansible-playbook /opt/ansiblepods/rustserver/start.yml --extra-vars \'{}\'".format(self.config_json)
-        print(command)
+        command = "ansible-playbook /opt/ansiblepods/rustserver/start.yml --extra-vars '{}'".format(self.config_json)
+        command = command.replace('"', '\"')
         command = command_prefix(self.container, command, 'root')
-        print(command)
         os.system(command)
