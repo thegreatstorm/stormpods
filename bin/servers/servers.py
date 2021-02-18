@@ -74,7 +74,7 @@ class RustServer:
 
     def start(self):
         # Needs container id
-        command = "ansible-playbook /opt/ansiblepods/rustserver/start.yml --extra-vars '{}'".format(self.config_json)
+        command = "ansible-playbook /opt/ansiblepods/rustserver/start.yml --extra-vars \'{}\'".format(self.config_json)
         print(command)
         command = command_prefix(self.container, command, 'root')
         print(command)
