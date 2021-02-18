@@ -3,10 +3,21 @@ from bin.servers.servers import RustServer, MineCraft, Terraria, Valheim
 
 
 class Servers:
-    def __init__(self, app_settings, user_input, container_id=None):
+    def __init__(self, app_settings=None, user_input=None, container_id=None):
         self.image = "storm-pod"
         self.app_settings = app_settings
         self.user_input = user_input
+
+        if app_settings is None:
+            self.app_settings = ""
+        else:
+            self.app_settings = app_settings
+
+        if user_input is None:
+            self.user_input = ""
+        else:
+            self.user_input = user_input
+
         if container_id is None:
             self.container_id = ""
         else:
