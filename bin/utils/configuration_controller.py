@@ -16,12 +16,13 @@ def config_controller(script_dir, default, local):
     return config
 
 
-def get_game_config(prefix_dir, game_name):
+def get_game_config(config_file):
     # Game Configuration
     game_config = {}
-    game_config_settings = config_controller(prefix_dir, "server/conf/{}.conf".format(game_name), "local.conf")
-    for each_section in game_config_settings.sections():
-        for (key, value) in game_config_settings.items(each_section):
+    config = configparser.RawConfigParser()
+    config.read(config_file)
+    for each_section in config.sections():
+        for (key, value) in config.items(each_section):
             game_config[key] = value
 
     return game_config

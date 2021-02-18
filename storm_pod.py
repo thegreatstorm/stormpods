@@ -56,7 +56,7 @@ if args.start and args.start is not None:
     user_input = args.start
     if args.config and args.config is not None:
         config_file = args.config
-        game_config = get_game_config(prefix_dir, config_file)
+        game_config = get_game_config(config_file)
         if args.container and args.container is not None:
             container = args.container
             ansible_vars = Ansible.convert_config_json(game_config)
