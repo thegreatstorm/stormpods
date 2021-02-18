@@ -42,6 +42,10 @@ def rustserver(image):
         os.system(command)
         command = command_prefix(data["container_id"], 'git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods', 'root')
         os.system(command)
+        command = command_prefix(data["container_id"], 'ansible-playbook /opt/ansiblepods/rustserver/requirements.yml', 'root')
+        os.system(command)
+        command = command_prefix(data["container_id"], 'ansible-playbook /opt/ansiblepods/rustserver/install.yml', 'root')
+        os.system(command)
 
     except Exception as e:
         print("Failed to create container: {}".format(str(e)))
