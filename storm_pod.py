@@ -80,3 +80,4 @@ if args.update:
     print("Updating Scripts")
     print("--------------------------------------------------------")
     print("Currently working on it.")
+
