@@ -39,7 +39,7 @@ class Servers:
 
     def start(self):
         if self.user_input == "rustserver":
-            server = RustServer(self.container, self.config_json)
+            server = RustServer(container=self.container, config_json=self.config_json)
             server.start()
         else:
             print("User Input not in the list.")

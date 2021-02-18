@@ -64,7 +64,7 @@ if args.start and args.start is not None:
             server = Servers(user_input=user_input, container=container, config_json=ansible_vars)
             server.start()
         else:
-            print("No container id Provided. --container_id=\"<id>\"")
+            print("No container id Provided. --container=\"<id/name>\"")
             exit(1)
     else:
         print("Make sure you use --config <config-file>")
