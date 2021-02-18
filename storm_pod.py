@@ -87,7 +87,6 @@ if args.delete and args.delete is not None:
         print("No container Provided. --container=\"<id>\"")
         exit(1)
 
-
 if args.list:
     print("Game Server Containers List")
     print("Make sure you keep me updated do a git pull!")

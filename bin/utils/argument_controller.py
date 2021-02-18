@@ -8,7 +8,7 @@ def argument_controller():
     parser.add_argument('--delete', help='Delete your game server (ID,Name)', required=False, action="store_true")
     parser.add_argument('--start', help='Delete your game server (ID,Name)', required=False)
     parser.add_argument('--container', help='Select container (ID,Name)', required=False)
-    parser.add_argument('--config', help='Delete your game server (ID,Name)', required=False)
+    parser.add_argument('--config', help='You can edit and point using --config="var/lib/confs/rustserver.conf"', required=False)
     parser.add_argument('--install', help='Install Docker Image', required=False, action='store_true')
     parser.add_argument('--list', help='List Game Servers', required=False, action='store_true')
     args = parser.parse_args()
