@@ -38,7 +38,7 @@ def rustserver(image):
         os.system(command)
         command = command_prefix(data["container_id"], 'echo "export app_port={}" >> /etc/bashrc'.format(app_port), 'root')
         os.system(command)
-        command = command_prefix(data["container_id"], 'echo "echo -e \"Welcome to Storm Pods! Server Port: $server_port Rcon Port: $rcon_port Mobile Port: $app_port \"" >> /etc/bashrc', 'root')
+        command = command_prefix(data["container_id"], 'echo "echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"" >> /etc/bashrc'.format(game_port,rcon_port,app_port), 'root')
         os.system(command)
 
     except Exception as e:
