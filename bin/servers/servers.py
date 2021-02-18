@@ -57,7 +57,7 @@ class RustServer:
             commands.append('echo \'export server_port={}\'>> /etc/bashrc'.format(game_port))
             commands.append('echo \'export rcon_port={}\' >> /etc/bashrc'.format(rcon_port))
             commands.append('echo \'export app_port={}\' >> /etc/bashrc'.format(app_port))
-            commands.append('echo \'echo -e \"Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \"\' >> /etc/bashrc'.format(game_port,rcon_port,app_port))
+            commands.append("echo 'echo -e \'Welcome to Storm Pods! Server Port: {} Rcon Port: {} Mobile Port: {} \'' >> /etc/bashrc".format(game_port,rcon_port,app_port))
             commands.append('git clone https://github.com/thegreatstorm/ansiblepods.git /opt/ansiblepods')
             commands.append('ansible-playbook /opt/ansiblepods/rustserver/requirements.yml')
             commands.append('ansible-playbook /opt/ansiblepods/rustserver/install.yml')
