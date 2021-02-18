@@ -65,8 +65,7 @@ if args.delete and args.delete is not None:
 
 if args.list:
     print("Game Server Containers List")
-    print("If you just installed me, and I don't have any game servers the --install will set me up.")
-    print("Make sure to run --update to get latest game list.")
+    print("Make sure you keep me updated do a git pull!")
     print("--------------------------------------------------------")
     game_list = ""
     data = urllib.request.urlopen("https://raw.githubusercontent.com/thegreatstorm/ansiblepods/main/gamelist.txt")
